@@ -146,29 +146,29 @@ fn main() {
     // ----------------------------------------------------------
     // if let statement
     // ----------------------------------------------------------
-    let config_max = Some(3u8);
+    let config_max: Option<u32> = Option::Some(100);
     match config_max {
-        Some(max) => println!("The maximum is configured to be {max}"),
+        Option::Some(max) => print!("The max is: {max}"),
+        Option::None => (),
+    }
+    // Or we can write it as:
+    let config_max = Some(100);
+    match config_max {
+        Some(max) => print!("The max is: {max}\n"),
         _ => (),
     }
-    // Exacly the same
-    let config_max = Some(3u8);
+
+    // To avoid writing the `_ +>()` becuase matches are exhustive we use a if let keyword
+    // ignoring the else
+    let config_max = Some(100);
     if let Some(max) = config_max {
-        println!("The maximum is configured to be {max}");
+        print!("The config max is: {max}\n");
     }
 
-    let coin = Coin::Dime;
     let mut count = 0;
-    match coin {
-        // ref measns that we copy only the valute of the state without using `ref` the whole state
-        // variable will be moved so lin 169 is not valid
-        Coin::Quarter(ref state) => println!("State quarter from {state:?}!"),
-        _ => count += 1,
-    }
-    // Ecaclly the same
-    let mut count = 0;
-    if let Coin::Quarter(ref state) = coin {
-        println!("State quarter from {state:?}!");
+    let coin = Coin::Quarter(City::Alex);
+    if let Coin::Quarter(state) = coin {
+        print!("This is a quarter of state: {state:?}");
     } else {
         count += 1;
     }
