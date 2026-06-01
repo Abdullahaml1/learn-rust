@@ -100,7 +100,7 @@ fn main() {
     // we can not print x as printing will borrow the reference to x which is already borrowed in
     // the let x_ref = &mut x; line
     // println!("x is `{}`, x_ref is `{}`", x, x_ref);
-    x = 9999; // ❌ ERROR: x is still borrowed
+    // x = 9999; // ❌ BUG: ERROR: x is still borrowed
     *x_ref = 100; // x_ref is used here – the borrow is alive
 
     // Unlogical Case: we can set the value to x as normal
@@ -111,4 +111,44 @@ fn main() {
     // println!("x is `{}`, x_ref is `{}`", x, x_ref);
     x = 9999; // ✅ works! No error
     // x_ref is never used again
+
+    // --------------------------------------------------------------
+    // Rust uses copying instead of moving for simple types and with types that implements copy and
+    // clone traits
+    // --------------------------------------------------------------
+
+    //here we can use x as long as we can without moving it
+    fn print_x(x: u32) {
+        ()
+    }
+    let x = 3;
+    print_x(x);
+    print_x(x);
+    print_x(x);
+    print_x(x);
+
+    // here the vlaue for data will be moved
+    struct Data {
+        x: u32,
+    }
+    fn print_data(x: Data) {
+        ()
+    }
+    let x = Data { x: 3 };
+    print_data(x);
+    // print_data(x); // BUG: value has moved we can not compile
+
+    // here the value is copied so no moving is happening
+    #[derive(Copy, Clone)]
+    struct DataCloned {
+        x: u32,
+    }
+    fn print_data_cloned(x: DataCloned) {
+        ()
+    }
+    let x = DataCloned { x: 3 };
+    print_data_cloned(x);
+    print_data_cloned(x);
+    print_data_cloned(x);
+    print_data_cloned(x);
 }
