@@ -89,4 +89,26 @@ fn main() {
     let world = &s[6..];
 
     println!("w1= {hello}, w2= {world}");
+
+    //-----------------------------------------------------------------------
+    // Borrwing extening example NLL (Non Lexical Lifetime) The borrow is not activatge unless it
+    // is actually used
+    //-----------------------------------------------------------------------
+    // Logical Error Case
+    let mut x = 3;
+    let x_ref = &mut x;
+    // we can not print x as printing will borrow the reference to x which is already borrowed in
+    // the let x_ref = &mut x; line
+    // println!("x is `{}`, x_ref is `{}`", x, x_ref);
+    x = 9999; // ❌ ERROR: x is still borrowed
+    *x_ref = 100; // x_ref is used here – the borrow is alive
+
+    // Unlogical Case: we can set the value to x as normal
+    let mut x = 3;
+    let x_ref = &mut x;
+    // we can not print x as printing will borrow the reference to x which is already borrowed in
+    // the let x_ref = &mut x; line
+    // println!("x is `{}`, x_ref is `{}`", x, x_ref);
+    x = 9999; // ✅ works! No error
+    // x_ref is never used again
 }
