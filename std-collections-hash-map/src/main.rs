@@ -52,4 +52,14 @@ fn main() {
         *x_ref = 33;
     }
     println!("{:?}", scores);
+
+    // Inizlizing items for hashmap with zero if doesnot exits
+    #[derive(Default, Debug)]
+    struct Goal {
+        x: u32,
+    }
+    let mut scores: HashMap<&str, Goal> = HashMap::new();
+    let goal: &mut Goal = scores.entry("Ahmed").or_default();
+    goal.x += 100;
+    println!("{:?}", scores);
 }

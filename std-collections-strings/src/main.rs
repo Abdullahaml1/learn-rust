@@ -81,4 +81,8 @@ fn main() {
     for c in s.bytes() {
         println!("{}", c);
     }
+    // str type when initilized it reserved a data space in the binary (written to the binary) so
+    // we can make something like this (refrence a varialbe that lived locally in the stack):
+    let s = "Hello".to_string() + &" World";
+    //                            ^
 }
