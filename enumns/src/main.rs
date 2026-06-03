@@ -181,4 +181,10 @@ fn main() {
         20..=50 => println!(">=20, <=50"),
         _ => println!("None"),
     }
+
+    // while -let satement
+    let mut vec = vec![1, 2, 3];
+    while let Some(val) = vec.pop() {
+        println!("{}", val);
+    }
 }
