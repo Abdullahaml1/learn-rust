@@ -172,4 +172,13 @@ fn main() {
     } else {
         count += 1;
     }
+
+    // Neat way of comparing numbers
+    println!();
+    let x = 21;
+    match x {
+        0..20 => println!("<20"),
+        20..=50 => println!(">=20, <=50"),
+        _ => println!("None"),
+    }
 }
