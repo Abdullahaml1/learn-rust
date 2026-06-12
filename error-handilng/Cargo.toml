@@ -1,0 +1,12 @@
+[package]
+name = "error-handilng"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+
+
+# To disable stack unwindoing for the panic in the production code to minimize binary size
+# [profile.release]
+# panic = 'abort'
