@@ -1,5 +1,6 @@
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::{self, ErrorKind, Read, Seek, Write};
+use std::ops::RemAssign;
 
 fn main() {
     // panic!("Error Here");
@@ -99,4 +100,14 @@ fn main() {
     // To support the ? operator over our custom error we have to implement the from function from
     // the `From` trait
     // ----------------------------------------
+    fn read_username_from_file_very_very_short(filepath: &str) -> Result<String, io::Error> {
+        let mut username = String::new();
+        File::open(&filepath)?.read_to_string(&mut username)?;
+        Ok(username)
+    }
+    read_username_from_file_very_very_short("hello.txt");
+    // Doing the exact sameting as the above
+    fn read_username_from_file_std(filepath: &str) -> Result<String, io::Error> {
+        fs::read_to_string(&filepath)
+    }
 }
