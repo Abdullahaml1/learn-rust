@@ -110,4 +110,32 @@ fn main() {
     fn read_username_from_file_std(filepath: &str) -> Result<String, io::Error> {
         fs::read_to_string(&filepath)
     }
+
+    // ----------------------------------------
+    // Error Propagatin: ? operator with Option
+    // ----------------------------------------
+    fn propagation_operator_with_option(input: Option<u32>) -> Option<u32> {
+        // The function will return None if the input is none and if not it will return Some of u32
+        Some(input?)
+    }
+    println!(
+        "Passing `None`: {:?}",
+        propagation_operator_with_option(None)
+    );
+    println!(
+        "Passing `Some(32)`: {:?}",
+        propagation_operator_with_option(Some(32))
+    );
+
+    // -------------------------------------------------------
+    // Returuing Error type by main function
+    // -------------------------------------------------------
+    use std::error::Error;
+    use std::fs::File;
+
+    fn main() -> Result<(), Box<dyn Error>> {
+        let greeting_file = File::open("hello.txt")?;
+
+        Ok(())
+    }
 }
