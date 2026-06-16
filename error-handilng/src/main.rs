@@ -138,4 +138,26 @@ fn main() {
 
         Ok(())
     }
+
+    // ----------------------------------------------------
+    // Mapping any non-resutl type to Result
+    // ----------------------------------------------------
+    struct Hamo {}
+
+    enum NonoErrors {
+        Bad(Hamo),
+        VeryBad,
+    }
+    impl NonoErrors {
+        fn from_hamo(hamo: Hamo) -> Self {
+            Self::Bad(hamo)
+        }
+    }
+
+    fn please_return_result_fro_me(res: Result<u32, Hamo>) -> Result<u32, NonoErrors> {
+        // res.map_err(NonoErrors::from_hamo)
+        // or
+        let x = res.map_err(NonoErrors::from_hamo)?;
+        Ok(x)
+    }
 }
