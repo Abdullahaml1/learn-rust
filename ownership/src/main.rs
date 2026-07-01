@@ -1,5 +1,9 @@
 // ---------------------------------------------------------------
 //Summary:
+// We have wither: borrwoing (referencing) and ownership (moving)
+//                     |
+//             |-----------------|
+//      Mutable Borrow       Imutable Borrow
 //At any given time, you can have either one mutable reference or any number of immutable references.
 //References must always be valid.
 //
