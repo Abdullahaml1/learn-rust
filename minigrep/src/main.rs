@@ -8,10 +8,10 @@ fn main() {
     // we might use
     // let args: Vec<OsString> = env::args_os().collect();
     // to deal with unicode strings
-    let args: Vec<String> = env::args().collect();
-    dbg!(&args);
+    // let args: Vec<String> = env::args().collect();
+    // dbg!(&args);
 
-    let config = Config::build(&args).unwrap_or_else(|err| {
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
         // writing to stderr
         eprintln!("There is an error while parsing argments: {}", err);
         process::exit(1);

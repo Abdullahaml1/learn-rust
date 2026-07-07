@@ -30,12 +30,20 @@ impl Config {
             ..Default::default()
         }
     }
-    pub fn build(args: &[String]) -> Result<Self, &'static str> {
-        if args.len() < 3 {
-            return Err("No enough args to produce search");
+    pub fn build(mut args_iter: impl Iterator<Item = String>) -> Result<Self, &'static str> {
+        // we alwyas have the first arg
+        if let None = args_iter.next() {
+            return Err("Unxcepected Error whil reading CLI args");
         }
-        let query = args[1].clone();
-        let filepath = args[2].clone();
+        let query = match args_iter.next() {
+            Some(s) => s,
+            None => return Err("Did not get query error"),
+        };
+
+        let filepath = match args_iter.next() {
+            Some(s) => s,
+            None => return Err("Did not get query error"),
+        };
 
         // NOTE: using env variables
         let ignore_case = env::var("IGNORE_CASE").is_ok();
@@ -50,23 +58,26 @@ impl Config {
 
 fn search_case_insensitive<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
-    let mut out_vec = Vec::new();
-    for line in content.lines() {
-        if line.to_lowercase().contains(&query) {
-            out_vec.push(line);
-        }
-    }
-    out_vec
+    content
+        .lines()
+        .filter(|line| line.to_lowercase().contains(&query))
+        .collect()
 }
 
 fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-    let mut out_vec = Vec::new();
-    for line in content.lines() {
-        if line.contains(query) {
-            out_vec.push(line);
-        }
-    }
-    out_vec
+    // let mut out_vec = Vec::new();
+    // for line in content.lines() {
+    //     if line.contains(query) {
+    //         out_vec.push(line);
+    //     }
+    // }
+    // out_vec
+
+    // with iterators
+    content
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
@@ -76,8 +87,14 @@ pub fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
         true => search_case_insensitive,
         false => search,
     };
+    let mut num_results = 0;
     for line in search_fn(&config.query, &content) {
+        num_results += 1;
         println!("{line}");
+    }
+    match num_results {
+        0 => println!("No resutls found!"),
+        _ => println!("Found {} results", num_results),
     }
     Ok(())
 }
