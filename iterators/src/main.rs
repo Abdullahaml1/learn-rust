@@ -132,4 +132,10 @@ fn main() {
         .map(|x: &i32| x * 2)
         .filter(|x: &i32| x % 2 == 0)
         .collect();
+
+    // ---------------------------------------------------------
+    // Important Note: Rust Iterators like c++ have zero-runtime abstraction
+    // which means for example all the map -> filter -> collect -> .... implemmented in LLVM as a
+    // single fore loop with optimized not temp variables
+    // ---------------------------------------------------------
 }
