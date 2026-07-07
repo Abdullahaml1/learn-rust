@@ -1,0 +1,14 @@
+[package]
+name = "playing-with-cargo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+
+# Default optimization for dev is 0 and for release is 3 (best performance)
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
