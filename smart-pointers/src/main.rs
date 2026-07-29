@@ -1,6 +1,14 @@
+use std::rc::Rc;
+
 #[derive(Debug)]
 enum List {
     Cons(i32, Box<List>),
+    Nil,
+}
+
+#[derive(Debug)]
+enum ListRc {
+    Cons(i32, Rc<ListRc>),
     Nil,
 }
 
@@ -76,4 +84,21 @@ fn main() {
         }
     }
     let h = HamoStruct::new();
+
+    // ----------------------------------------------------------------------------
+    // `Rc` (Reference Counting) is a smart pointer to the heap which can hold multpir refs with
+    // mour than one variable and it will be droped if the all references are droped
+    // NOTE: it can not be used across threads use `Arc`
+    // ----------------------------------------------------------------------------
+    let a = Rc::new(ListRc::Cons(3, Rc::new(ListRc::Nil)));
+    println!("count after creating a = {}", Rc::strong_count(&a));
+    let b = Rc::new(ListRc::Cons(4, Rc::clone(&a)));
+    println!("count after b ref = {}", Rc::strong_count(&a));
+    let c = Rc::new(ListRc::Cons(6, Rc::clone(&a)));
+    println!("count after c ref = {}", Rc::strong_count(&a));
+    println!("{:?}\n{:?}\n{:?}", a, b, c)
+
+    // -----------------------------------------------------------------------------------------
+    // Intrior Mutability
+    // -----------------------------------------------------------------------------------------
 }
