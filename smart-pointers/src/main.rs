@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -96,9 +97,78 @@ fn main() {
     println!("count after b ref = {}", Rc::strong_count(&a));
     let c = Rc::new(ListRc::Cons(6, Rc::clone(&a)));
     println!("count after c ref = {}", Rc::strong_count(&a));
-    println!("{:?}\n{:?}\n{:?}", a, b, c)
+    println!("{:?}\n{:?}\n{:?}", a, b, c);
 
     // -----------------------------------------------------------------------------------------
-    // Intrior Mutability
+    // Intrior Mutability look at the `lib.rs`
     // -----------------------------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------------------------
+    // Alllowing multiple owners (more than one mutable borrow) for the same data. Breaking rust
+    // borrow rules which is: we can not have more thean ONE mutable borrow  (owner) of the same
+    // data.
+    // -----------------------------------------------------------------------------------------
+    #[derive(Debug)]
+    struct Hamo {
+        x: u32,
+    }
+    let ptr = Rc::new(RefCell::new(Hamo { x: 10 }));
+    println!("ptr: {:?}", ptr);
+
+    let ptra = Rc::clone(&ptr);
+    println!("ptra: {:?}", ptra);
+
+    let ptrb = Rc::clone(&ptr);
+    println!("ptrb: {:?}", ptrb);
+
+    ptr.borrow_mut().x = 9;
+    println!("ptr: {:?}", ptr);
+    println!("ptra: {:?}", ptra);
+    println!("ptrb: {:?}", ptrb);
+    ptra.borrow_mut().x = 3;
+    println!("ptr: {:?}", ptr);
+    println!("ptra: {:?}", ptra);
+    println!("ptrb: {:?}", ptrb);
+    ptrb.borrow_mut().x = 1;
+    println!("ptr: {:?}", ptr);
+    println!("ptra: {:?}", ptra);
+    println!("ptrb: {:?}", ptrb);
+
+    let mut hamo = Hamo { x: 10 };
+    let ptr = &mut hamo;
+    let ptra = &mut hamo;
+    let ptrb = &mut hamo;
+
+    // BUG: error we can have only one owner (mutable borrow) for the same data
+    // without any usage of the pointers the code is not compling
+    // println!("ptr: {:?}", ptr);
+    // println!("ptra: {:?}", ptra);
+    // println!("ptrb: {:?}", ptrb);
+
+    // bypassing rust borrow rules
+    #[derive(Debug)]
+    struct HamoVec {
+        x: Vec<u32>,
+    }
+    let ptr = Rc::new(RefCell::new(HamoVec { x: vec![] }));
+    println!("ptr: {:?}", ptr);
+
+    let ptra = Rc::clone(&ptr);
+    println!("ptra: {:?}", ptra);
+
+    let ptrb = Rc::clone(&ptr);
+    println!("ptrb: {:?}", ptrb);
+
+    ptr.borrow_mut().x.push(0);
+    println!("ptr: {:?}", ptr);
+    println!("ptra: {:?}", ptra);
+    println!("ptrb: {:?}", ptrb);
+    ptra.borrow_mut().x.push(1);
+    println!("ptr: {:?}", ptr);
+    println!("ptra: {:?}", ptra);
+    println!("ptrb: {:?}", ptrb);
+    ptrb.borrow_mut().x.push(2);
+    println!("ptr: {:?}", ptr);
+    println!("ptra: {:?}", ptra);
+    println!("ptrb: {:?}", ptrb);
 }

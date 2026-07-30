@@ -13,6 +13,7 @@ use std::cell::RefCell;
 // to allocate a place in heap while applying rust rules in runtime we might do
 // let a = RefCell::new(Box::new(3));
 // `RefCell` has manily two methods: `borrow()` and `borrow_mute()`
+// `RefCell` is not working in multithreading but `Mutex` works
 // ------------------------------------------------------------------
 pub trait Messenger {
     fn send(&self, msg: &str);
