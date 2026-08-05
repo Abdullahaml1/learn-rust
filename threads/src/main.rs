@@ -247,4 +247,12 @@ fn main() {
         }
     });
     println!("res={:?}", res);
+    // -------------------------------------------------------------------
+    // The Send marker trait indicates that ownership of values of the type implementing
+    // `Send` can be transferred between threads. Most of types implements `Send` but not `Rc`
+    //
+    // The Sync marker trait indicates that it is safe for the type implementing
+    // Sync to be referenced from multiple threads. Most of types implements `Sync` but `RefCell`
+    // does not
+    // -------------------------------------------------------------------
 }
