@@ -164,9 +164,7 @@ fn main() {
             });
             handle.push(h);
         }
-        for h in handle {
-            h.join().unwrap();
-        }
+        handle.into_iter().map(|h| h.join().unwrap());
         res_ptr.lock().unwrap().clone()
     }
 
