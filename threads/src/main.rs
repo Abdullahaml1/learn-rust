@@ -212,6 +212,7 @@ fn main() {
     // thread::scope
     // Unlike non-scoped threads, scoped threads can borrow non-'static data, as the
     // scope guarantees all threads will be joined at the end of the scope.
+    // url: https://doc.rust-lang.org/stable/std/thread/fn.scope.html
     // ------------------------------------------------------------
     //
     let mut a = vec![1, 2, 3];
